@@ -4,6 +4,8 @@
 # Author: Christiam Camacho (camacho@ncbi.nlm.nih.gov)
 # Created: Thu Oct  4 07:02:21 2018
 
-export PATH=/bin:/usr/bin:/Users/christiam/Downloads/ncbi-blast-2.8.0+/bin
+SCRIPT_DIR=$(cd "`dirname "$0"`"; pwd)
+source $SCRIPT_DIR/common.sh
 
-time blastdbcmd -entry all -db nr -outfmt "%o|%g|%a|%T|%L|%X|%s|%l" -out nr.meta
+time blastdbcmd -entry all -db nr -outfmt "%o|%g|%a|%T|%L|%X|%s|%l" \
+    -out $SCRIPT_DIR/../data/nr.meta

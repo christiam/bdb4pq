@@ -8,3 +8,4 @@
 export GCP_PROJECT=
 export GCP_REGION=us-east4
 export GCP_ZONE=us-east4-b
+export GCP_BUCKET=$USER-test

@@ -29,11 +29,11 @@ def main():
         .getOrCreate()
 
     df = spark.read.parquet(args.parquet)
-    seqs = df.select("sequence").cache()
+    seqs = df.select("sequence").rdd.cache()
 
     for r in args.residue:
         start = time.time()
-        num = seqs.rdd.map( lambda s : s.count(r) ).reduce(add)
+        num = seqs.map( lambda s : s.count(r) ).reduce(add)
         end = time.time()
         print("Residue {} found {} times in {}".format(r, num, (end-start)))
 

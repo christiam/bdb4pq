@@ -15,7 +15,7 @@ if [ ! -z "$CLUSTER_ID" ] ; then
     gcloud dataproc jobs submit pyspark $SRC \
         --cluster ${CLUSTER_ID} \
         --region ${GCP_REGION} \
-    -- $*
-    #-- -parquet gs://camacho-test/nr/nr.parquet $*
+    -- -parquet gs://camacho-test/nr/nr.parquet $*
+    #-- $*
 fi
 

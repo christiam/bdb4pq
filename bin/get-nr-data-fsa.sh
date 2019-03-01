@@ -6,14 +6,16 @@
 
 SCRIPT_DIR=$(cd "`dirname "$0"`"; pwd)
 source $SCRIPT_DIR/common.sh
-<<<<<<< Updated upstream
 OUTPUT_DATA=$(realpath $SCRIPT_DIR/../data)
-DB=/panfs/pan1.be-md.ncbi.nlm.nih.gov/blastprojects/GCP_blastdb/orig_dbs/nr
+BLASTDB=/panfs/pan1.be-md.ncbi.nlm.nih.gov/blastprojects/GCP_blastdb/orig_dbs
+DB=$BLASTDB/nr
 [ -d $OUTPUT_DATA ] || mkdir -p $OUTPUT_DATA
-OUT=$OUTPUT_DATA/nr-meta.csv
-echo "accession|gi|taxid|sci_name|sequence|slen" > $OUT
-time blastdbcmd -entry all -db $DB \
-    -outfmt "%a|%g|%T|%S|%s|%l" >> $OUT
-#time docker run --rm -v $BLASTDB:/blast/blastdb:ro ncbi/blast blastdbcmd -entry all -db nr \
-#    -outfmt "%a|%g|%T|%S|%s|%l" >> $OUT
-#gsutil cp -m $OUT gs://dataproc-logs-$USER/
+
+for vol in $(grep DBLIST $DB.pal | sed 's/DBLIST //' | tr -d '"' ); do
+    OUT=$OUTPUT_DATA/$vol-meta.csv
+    echo "accession|gi|taxid|sci_name|sequence|slen" > $OUT
+done
+set -x
+parallel --use-cores-instead-of-threads --jobs 50% -q -t --header : --results $OUTPUT_DATA \
+    blastdbcmd -entry all -db $BLASTDB/{} \
+    -outfmt '%a|%g|%T|%S|%s|%l' -out $OUTPUT_DATA/{}-meta.csv ::: vols $(grep DBLIST $DB.pal | sed 's/DBLIST //' | tr -d '"' )

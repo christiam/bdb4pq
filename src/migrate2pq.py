@@ -21,27 +21,29 @@ def main():
     parser = create_arg_parser()
     args = parser.parse_args()
 
-##    spark = SparkSession \
-##        .builder \
-##        .appName("migrate2pq") \
-##        .getOrCreate()
+    spark = SparkSession \
+        .builder \
+        .appName("migrate2pq") \
+        .getOrCreate()
 
 
     print("Reading {}".format(args.input_file))
     start = time.time()
-    ##df = spark.read.load(args.input, format="csv", sep="|", inferSchema="true", header="true")
+    df = spark.read.load(args.input_file, format="csv", sep="|", inferSchema="true", header="true")
     end = time.time()
     print("Reading done in {}".format(end - start))
 
     print("Writing {}".format(args.out))
     start = time.time()
-    ##df.write.mode("overwrite").parquet(args.out)
+    df.write.mode("overwrite").parquet(args.out)
     end = time.time()
     print("Writing done in {}".format(end - start))
-    # df.createOrReplaceTempView("pqFile")
-    # human = spark.sql("SELECT * FROM pqFile where taxid == 9606")
-    # human.show()
-    ##spark.stop()
+
+    #df.createOrReplaceTempView("pqFile")
+    #human = spark.sql("SELECT * FROM pqFile where taxid == 9606")
+    #human.show()
+
+    spark.stop()
 
 
 def create_arg_parser():

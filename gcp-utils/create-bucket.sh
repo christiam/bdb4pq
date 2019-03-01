@@ -7,8 +7,10 @@
 SCRIPT_DIR=$(dirname $0)
 source ${SCRIPT_DIR}/common.sh
 
-set -euo pipefail
+set -uo pipefail
 shopt -s nullglob
 
+gsutil mb -l $GCP_REGION -c regional gs://${GCP_BUCKET_LOGS}
+gsutil iam ch allUsers:objectViewer ${GCP_BUCKET_LOGS}
 gsutil mb -l $GCP_REGION -c regional gs://${GCP_BUCKET}
 gsutil iam ch allUsers:objectViewer ${GCP_BUCKET}

@@ -5,7 +5,7 @@
 # Created: Mon Feb  4 12:09:54 2019
 
 SCRIPT_DIR=$(dirname $0)
-[ -z "$GCP_PROJECT" ] && source ${SCRIPT_DIR}/common.sh
+source ${SCRIPT_DIR}/common.sh
 set -euo pipefail
 
 NAME=${USER}-test-cluster
@@ -24,9 +24,6 @@ done
 MASTER=n1-standard-4
 DISK_PER_MASTER=400 # For test data
 
-DATAPROC_BUCKET=dataproc-logs-$USER
-INIT_BUCKET=gs://spark-experiments
-
 if [ $NUM_WORKERS == 0 ] ; then
     set -x
     gcloud dataproc clusters create $NAME --single-node \
@@ -39,9 +36,7 @@ if [ $NUM_WORKERS == 0 ] ; then
         --labels project=blast,creator=$USER,project=blast-mr,owner=$USER,maintainer=camacho \
         --image-version 1.3 \
         --properties dataproc:dataproc.monitoring.stackdriver.enable=true,dataproc:dataproc.logging.stackdriver.enable=true, \
-        --initialization-action-timeout 30m \
-        --initialization-actions $INIT_BUCKET/dataproc-ganglia.sh \
-        --bucket $DATAPROC_BUCKET
+        --bucket $GCP_BUCKET_LOGS
 else
     MASTER=n1-standard-2
     WORKER=n1-standard-2
@@ -64,7 +59,5 @@ else
         --labels project=blast,creator=$USER,project=blast-mr,owner=$USER,maintainer=camacho \
         --image-version 1.3 \
         --properties dataproc:dataproc.monitoring.stackdriver.enable=true,dataproc:dataproc.logging.stackdriver.enable=true, \
-        --initialization-action-timeout 30m \
-        --initialization-actions $INIT_BUCKET/dataproc-ganglia.sh \
-        --bucket $DATAPROC_BUCKET
+        --bucket $GCP_BUCKET_LOGS
 fi

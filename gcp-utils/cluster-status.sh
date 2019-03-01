@@ -1,12 +1,12 @@
 #! /bin/bash
 SCRIPT_DIR=$(dirname $0)
-[ -z "$GCP_PROJECT" ] && source ${SCRIPT_DIR}/common.sh
+source ${SCRIPT_DIR}/common.sh
 set -euo pipefail
 
 if [ $# == 1 ] ; then
     CLUSTER_ID=$1
 else
-    CLUSTER_ID=$($SCRIPT_DIR/get-active-cluster-id.sh)
+    CLUSTER_ID=$($SCRIPT_DIR/get-my-active-cluster-id.sh)
 fi
 
 if [ ! -z "$CLUSTER_ID" ] ; then

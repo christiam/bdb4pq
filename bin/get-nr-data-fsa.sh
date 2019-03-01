@@ -6,6 +6,10 @@
 
 SCRIPT_DIR=$(cd "`dirname "$0"`"; pwd)
 source $SCRIPT_DIR/common.sh
-
-time blastdbcmd -entry all -db nr -outfmt "%o|%g|%a|%T|%L|%X|%s|%l" \
-    -out $SCRIPT_DIR/../data/nr.meta
+OUTPUT_DATA=$(realpath $SCRIPT_DIR/../data)
+DB=/panfs/pan1.be-md.ncbi.nlm.nih.gov/blastprojects/GCP_blastdb/orig_dbs/nr
+[ -d $OUTPUT_DATA ] || mkdir -p $OUTPUT_DATA
+OUT=$OUTPUT_DATA/nr-meta.csv
+echo "accession|gi|taxid|sci_name|sequence|slen" > $OUT
+time blastdbcmd -entry all -db $DB \
+    -outfmt "%a|%g|%T|%S|%s|%l" >> $OUT

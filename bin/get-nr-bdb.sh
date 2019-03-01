@@ -7,13 +7,13 @@
 SCRIPT_DIR=$(cd "`dirname "$0"`"; pwd)
 source $SCRIPT_DIR/common.sh
 
-BLASTDB=${1:-"$HOME/blastdb"}
+BLASTDB=${1:-"$SCRIPT_DIR/../blastdb"}
 
+[ -d $BLASTDB ] || mkdir -p $BLASTDB
 cd $BLASTDB
-#time update_blastdb.pl --decompress nr.80 &
-#time update_blastdb.pl --decompress nr.81 &
-#wait
-time update_blastdb.pl --passive --decompress nr.81 --verbose
+[ -f nr.80.pin ] || time update_blastdb.pl --decompress nr.80 &
+[ -f nr.81.pin ] || time update_blastdb.pl --decompress nr.81 &
+wait
 mv nr.pal nr.pal~
 cat > nr.pal <<EOF
 TITLE nr test subset

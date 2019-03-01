@@ -13,6 +13,7 @@ JobId: ec4daf8de71347f2bcd79d606c1f9208
 Searching for residues
 nr.parquet
 * split into 649 partitions
-* 174 secs to scan 1st time, 112 second times
+* 174 secs to scan 1st time, 112 second times (158, 86,86)
 
-JobId:  3b5bd93dedc548359d544b56883524af    
+JobId:  3b5bd93dedc548359d544b56883524af
+ 6598d2ae3d0948ca8ef2454f6a777d95

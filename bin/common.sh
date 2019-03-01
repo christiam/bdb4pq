@@ -4,5 +4,4 @@
 # Author: Christiam Camacho (camacho@ncbi.nlm.nih.gov)
 # Created: Thu Oct  4 07:51:26 2018
 
-export PATH=/bin:/usr/bin
 export BLASTDB=$(realpath $(dirname "$0")/../blastdb)

@@ -5,7 +5,6 @@
 # Created: Thu Oct  4 07:44:38 2018
 
 SCRIPT_DIR=$(cd "`dirname "$0"`"; pwd)
-source $SCRIPT_DIR/common.sh
 
 BLASTDB=${1:-"$SCRIPT_DIR/../blastdb"}
 

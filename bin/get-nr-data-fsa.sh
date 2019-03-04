@@ -5,7 +5,6 @@
 # Created: Thu Oct  4 07:02:21 2018
 
 SCRIPT_DIR=$(cd "`dirname "$0"`"; pwd)
-source $SCRIPT_DIR/common.sh
 OUTPUT_DATA=$(realpath $SCRIPT_DIR/../data)
 BLASTDB=/panfs/pan1.be-md.ncbi.nlm.nih.gov/blastprojects/GCP_blastdb/orig_dbs
 DB=$BLASTDB/nr

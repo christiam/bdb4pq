@@ -14,5 +14,5 @@ export SPARK_PRINT_LAUNCH_COMMAND=1
 time spark-submit --master local[2] \
     --name "residue-count" \
     --verbose \
-    $SRC -parquet gs://camacho-test/nr/nr.parquet $*
+    $SRC -parquet $INPUT $*
 

@@ -33,7 +33,7 @@ def main():
 
     for r in args.residue:
         start = time.time()
-        num = seqs.map( lambda s : s.count(r) ).reduce(add)
+        num = seqs.map( lambda row : row.sequence.count(r) ).reduce(add)
         end = time.time()
         print("Residue {} found {} times in {}".format(r, num, (end-start)))
 

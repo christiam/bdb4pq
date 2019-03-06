@@ -26,10 +26,12 @@
 
 package gov.nih.nlm.ncbi.app;
 
-import org.apache.spark.sql.SparkSession;
+import org.apache.commons.lang.StringUtils;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.sql.*;
+import org.apache.spark.api.java.function.*;
+
 //import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
 
 import com.google.common.base.Stopwatch;
 
@@ -42,7 +44,7 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-/** Supported encodings 
+/** Program to count residues in a parquet file
  *
  * @author Christiam Camacho
  */
@@ -58,9 +60,34 @@ public class ResidueCount {
       System.exit(1);
     }
     SparkSession spark = SparkSession.builder().getOrCreate();
-    //JavaSparkContext sc = new JavaSparkContext(spark.sparkContext());
     Dataset<Row> df = spark.read().parquet(_input);
-    df.show();
+    df.createOrReplaceTempView("parquet_data");
+    //df.show();
+
+    Dataset<Row> seqs = spark.sql("SELECT sequence FROM parquet_data").cache();
+    Encoder<Integer> integerEncoder = Encoders.INT();
+    for (String residue : args) {
+        if (residue.length() != 1)
+          continue;
+        Stopwatch timer = new Stopwatch().start();
+        int num = seqs.map
+          ((MapFunction<Row, Integer>) row -> StringUtils.countMatches(row.getString(0), residue), integerEncoder)
+          .reduce( (ReduceFunction<Integer>) (a, b) -> a + b);
+        timer.stop();
+        System.out.println(String.format("TIME: Residue %s found %d times in %s", residue, num, timer));
+    }
+
+    JavaRDD<Row> seqs_rdd = spark.sql("SELECT sequence FROM parquet_data").toJavaRDD().setName("sequences").cache();
+    for (String residue : args) {
+      if (residue.length() != 1)
+        continue;
+      Stopwatch timer = new Stopwatch().start();
+      int num = seqs_rdd.map(
+              (Function<Row, Integer>) row -> StringUtils.countMatches(row.getString(0), residue))
+              .reduce( (Function2<Integer, Integer, Integer>) (a,b) -> a+ b);
+      timer.stop();
+      System.out.println(String.format("TIME RDD: Residue %s found %d times in %s", residue, num, timer));
+    }
 
   }
 

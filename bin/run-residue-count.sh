@@ -1,5 +1,5 @@
 #!/bin/bash
-# gcp-utils/run-residue-count.sh: Counts the residues in a parquet file
+# bin/run-residue-count.sh: Counts the residues in a parquet file
 #
 # Author: Christiam Camacho (christiam.camacho@gmail.com)
 # Created: Fri Mar  1 04:13:23 2019
@@ -9,7 +9,7 @@ set -euo pipefail
 
 MASTER=yarn
 SRC=$(realpath $SCRIPT_DIR/../src/residue-count.py)
-INPUT=hdfs:///user/$USER/nr.80.parquet
+INPUT=hdfs:///user/camacho/nr.80.parquet
 SPARK_HOME=/usr/local/spark/2.3.2
 #JARS=$SPARK_HOME/jars/snappy-0.2.jar,$SPARK_HOME/jars/snappy-java-1.1.2.6.jar
 JARS=$SPARK_HOME/jars/snappy-java-1.1.2.6.jar

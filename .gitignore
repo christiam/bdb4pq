@@ -1,3 +1,4 @@
 *.fsa
 data/
 blastdb
+.idea

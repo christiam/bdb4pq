@@ -35,7 +35,7 @@ def main():
         start = time.time()
         num = seqs.map( lambda row : row.sequence.count(r) ).reduce(add)
         end = time.time()
-        print("Residue {} found {} times in {}".format(r, num, (end-start)))
+        print("TIME: Residue {} found {} times in {}".format(r, num, (end-start)))
 
     return 0
 

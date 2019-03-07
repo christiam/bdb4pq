@@ -29,6 +29,10 @@ endif
 #.PHONY: all
 #all: ${JAR}
 
+.PHONY: run_at_gcp_python
+run_at_gcp_python:
+	gcp-utils/run-residue-count.sh M Q P R S
+
 .PHONY: run_at_gcp
 run_at_gcp: ${JAR}
 	gcp-utils/run-java-residue-count.sh M Q P R S

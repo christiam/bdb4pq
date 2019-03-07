@@ -65,26 +65,27 @@ public class ResidueCount {
     //df.show();
 
     Dataset<Row> seqs = spark.sql("SELECT sequence FROM parquet_data").cache();
-    Encoder<Integer> integerEncoder = Encoders.INT();
+    Encoder<Long> longEncoder = Encoders.LONG();
     for (String residue : args) {
         if (residue.length() != 1)
           continue;
         Stopwatch timer = new Stopwatch().start();
-        int num = seqs.map
-          ((MapFunction<Row, Integer>) row -> StringUtils.countMatches(row.getString(0), residue), integerEncoder)
-          .reduce( (ReduceFunction<Integer>) (a, b) -> a + b);
+        long num = seqs.map
+          ((MapFunction<Row, Long>) row -> (long)StringUtils.countMatches(row.getString(0), residue), longEncoder)
+          .reduce( (ReduceFunction<Long>) (a, b) -> a + b);
         timer.stop();
         System.out.println(String.format("TIME: Residue %s found %d times in %s", residue, num, timer));
     }
+    seqs.unpersist();
 
     JavaRDD<Row> seqs_rdd = spark.sql("SELECT sequence FROM parquet_data").toJavaRDD().setName("sequences").cache();
     for (String residue : args) {
       if (residue.length() != 1)
         continue;
       Stopwatch timer = new Stopwatch().start();
-      int num = seqs_rdd.map(
-              (Function<Row, Integer>) row -> StringUtils.countMatches(row.getString(0), residue))
-              .reduce( (Function2<Integer, Integer, Integer>) (a,b) -> a+ b);
+      long num = seqs_rdd.map(
+              (Function<Row, Long>) row -> (long)StringUtils.countMatches(row.getString(0), residue))
+              .reduce( (Function2<Long, Long, Long>) (a,b) -> a+ b);
       timer.stop();
       System.out.println(String.format("TIME RDD: Residue %s found %d times in %s", residue, num, timer));
     }

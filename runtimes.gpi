@@ -1,0 +1,16 @@
+# gnuplot configuration file
+# Created: Mon 11 Mar 2019 01:09:25 PM EDT
+set ylabel "Seconds"
+set xlabel "Run number"
+set grid
+set terminal png
+set xtics ("1" 0, "2" 1, "3" 2, "4" 3, "5" 4)
+#set key outside below
+set ylabel 'Time (seconds)'
+
+set title "Runtime to search for a given residue in nr.parquet"
+set output "parquet-search-runtimes.png"
+
+plot 'runtimes.dat' using 1 t 'java dataframe' w lp, \
+     '' u 2 t 'java rdd' w lp, \
+     '' u 3 t 'python rdd' w lp

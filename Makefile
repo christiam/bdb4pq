@@ -1,18 +1,6 @@
-# Makefile for mrblast-demo
+# Makefile for building/running residue counting programs on parquet
 # Author: Christiam Camacho (camacho@ncbi.nlm.nih.gov)
-# Created: Wed 24 Jan 2018 05:37:55 PM EST
-
-MASTER?=yarn
-DRIVER_MEMORY?=2G
-EXECUTOR_MEMORY?=4G
-CLASS?=gov.ncbi.blast.mapreduce.app.MapReduceBlast
-NUM_EXECUTORS=12
-NUM_CORES=4
-DB?=/user/camacho/swissprot
-NREPEATS?=3
-RECSPERMAP?=200000
-MODE?=blastp
-NAME?=${USER}.$(shell echo ${CLASS} | cut -d . -f 6 ).$(shell echo ${DB} | awk -F/ '{print $$NF}' ).${DRIVER_MEMORY}.${NUM_EXECUTORS}.${EXECUTOR_MEMORY}.${NUM_CORES}
+# Created: Thu 07 Mar 2019 02:00:03 PM EST
 
 JAR_VERSION=$(shell grep version pom.xml  | grep -v encoding | head -1 | sed 's/<version>//;s,</version>,,' | tr -d ' ')
 JAR=target/residue-count-$(JAR_VERSION).jar
@@ -26,29 +14,28 @@ ifdef QUIET
 	MAVEN_OPTS=-q
 endif
 
-#.PHONY: all
-#all: ${JAR}
+.PHONY: all
+all: run_at_gcp_java run_at_gcp_python 
 
 .PHONY: run_at_gcp_python
 run_at_gcp_python:
-	gcp-utils/run-residue-count.sh M Q P R S
+	gcp-utils/run-python-residue-count.sh M Q P R S
 
-.PHONY: run_at_gcp
-run_at_gcp: ${JAR}
+.PHONY: run_at_gcp_java
+run_at_gcp_java: ${JAR}
 	gcp-utils/run-java-residue-count.sh M Q P R S
 
-.PHONY: run_at_ncbi
-run_at_ncbi: ${JAR}
-	bin/run-java-residue-count.sh M Q P R S
-
-
-.PHONY: show_help
-show_help: ${JAR}
-	spark-submit --master ${MASTER} --queue prod.blast \
-		--class ${CLASS} $^ -help -db ${DB}
+# Doesn't work
+#.PHONY: run_at_ncbi_java
+#run_at_ncbi_java: ${JAR}
+#	bin/run-java-residue-count.sh M Q P R S
 
 ${JAR}:  ${JAVA_SRC} pom.xml
 	mvn ${MAVEN_OPTS} package
+
+parquet-search-runtimes.png: runtimes.gpi runtimes.dat
+	gnuplot $<
+	cp $@ /home/camacho/
 
 .PHONY: unit_test
 unit_test: all

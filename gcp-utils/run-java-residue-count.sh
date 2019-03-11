@@ -12,7 +12,7 @@ MAIN_CLASS=gov.nih.nlm.ncbi.app.ResidueCount
 JAR=$(find target -type f -name "*.jar")
 CLUSTER_ID=$($SCRIPT_DIR/get-my-active-cluster-id.sh)
 INPUT=gs://camacho-test/nr/nr.80.parquet
-#INPUT=gs://camacho-test/nr/nr.parquet
+INPUT=gs://camacho-test/nr/nr.parquet
 
 if [ ! -z "$CLUSTER_ID" ] ; then
     set -x

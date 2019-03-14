@@ -35,8 +35,9 @@ def main():
         start = time.time()
         num = seqs.map( lambda row : row.sequence.count(r) ).reduce(add)
         end = time.time()
-        print("TIME: Residue {} found {} times in {}".format(r, num, (end-start)))
+        print("TIME RDD: Residue {} found {} times in {}".format(r, num, (end-start)))
 
+    spark.stop()
     return 0
 
 def create_arg_parser():

@@ -33,8 +33,11 @@ run_at_gcp_java: ${JAR}
 ${JAR}:  ${JAVA_SRC} pom.xml
 	mvn ${MAVEN_OPTS} package
 
-parquet-search-runtimes.png: runtimes.gpi runtimes.dat
-	gnuplot $<
+runtimes.dat:
+	bin/proc-logs.pl < typescript > $@
+
+parquet-search-runtimes.png: runtimes.dat runtimes.gpi
+	gnuplot -e "output='$@';data_file='$<'" runtimes.gpi
 	cp $@ /home/camacho/
 
 .PHONY: unit_test

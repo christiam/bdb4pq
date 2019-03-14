@@ -40,6 +40,10 @@ parquet-search-runtimes.png: runtimes.dat runtimes.gpi
 	gnuplot -e "output='$@';data_file='$<'" runtimes.gpi
 	cp $@ /home/camacho/
 
+parquet-search-runtimes-killed-worker.png: runtimes.dat runtimes.gpi
+	gnuplot -e "output='$@';data_file='$<'" runtimes.gpi
+	cp $@ /home/camacho/
+
 .PHONY: unit_test
 unit_test: all
 	mvn ${MAVEN_OPTS} test

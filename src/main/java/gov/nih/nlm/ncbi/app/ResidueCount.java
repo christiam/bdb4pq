@@ -89,7 +89,7 @@ public class ResidueCount {
       timer.stop();
       System.out.println(String.format("TIME RDD: Residue %s found %d times in %s", residue, num, timer));
     }
-
+    spark.stop();
   }
 
   private static boolean processCLI(String[] args) throws ParseException {

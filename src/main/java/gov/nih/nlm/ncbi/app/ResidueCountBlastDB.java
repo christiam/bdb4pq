@@ -55,13 +55,12 @@ import java.security.GeneralSecurityException;
 
 import org.apache.commons.cli.ParseException;
 
-/** Program to count residues a binary file downloaded from a GS bucket
+/** Program to count residues in a binary file downloaded from a GS bucket
  *
  * @author Greg Boratyn
  */
 public class ResidueCountBlastDB {
 
-  //private static final Log LOG = LogFactory.getLog(ResidueCount.class);
     public static void main(String[] args) throws ParseException,
                                                   GeneralSecurityException,
                                                   IOException {
@@ -87,13 +86,15 @@ public class ResidueCountBlastDB {
                            Storage storage =
                                buildStorageService("residue-count-blastdb");
 
+                           System.out.println(String.format("Downloading: %s",
+                                                            item));
                            download_to_file(storage, bucket, item,
                                             dest + item);
                            return dest + item;
                                      } ).cache();
     
     // count bytes
-    for (int i=0;i < 5;i++) {
+    for (int i=0;i < 10;i++) {
         Stopwatch timer = new Stopwatch().start();
         Integer result = db.map(f -> countBytes(f)).reduce((a, b) -> a + b);
         timer.stop();

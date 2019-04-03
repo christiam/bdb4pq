@@ -4,3 +4,5 @@ blastdb
 .idea
 *.dat
 *.png
+*~
+target

@@ -25,6 +25,12 @@ run_at_gcp_python:
 run_at_gcp_java: ${JAR}
 	gcp-utils/run-java-residue-count.sh M Q P R S
 
+.PHONY: run_at_gcp_java_blastdb
+run_at_gcp_java_blastdb: ${JAR}
+	gcp-utils/run-java-residue-count-blastdb.sh
+
+
+
 # Doesn't work
 #.PHONY: run_at_ncbi_java
 #run_at_ncbi_java: ${JAR}
